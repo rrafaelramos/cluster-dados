@@ -1,0 +1,11 @@
+CREATE DATABASE `publicacoes` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+use publicacoes;
+
+create table publicacoes_fila_2020_08_02(
+	id bigint auto_increment,
+	ra_conteudo text,
+	primary key (id)
+);
+
+
