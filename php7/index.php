@@ -5,7 +5,6 @@
     <title>index</title>
 </head>
 <body>
-4ª
 
 <?php
     include ('conn.php');
@@ -21,45 +20,54 @@
     $i = 0;
     $position_juiz = [];
     $position_escrivao = [];
-    $parte = '';
+    $nome_juiz = [];
+    $alimentos = [];
+    $divorcios = [];
+    $paternidade = [];
+    $inventario = [];
+    $classificacao = [];
+
     while ($publicacao = $busca->fetch_array()){
         echo '<hr/>';
 
+        //descobre a posição do juiz no array
         $position_juiz[$i] = strpos($publicacao["ra_conteudo"], "JUIZ(A)");
+        //descobre a posição do escrivão no array
         $position_escrivao[$i] = strpos($publicacao["ra_conteudo"], "ESCRIV");
-        $quantidade_para_tras = $position_juiz[$i] - $position_escrivao[$i];
 
+        //pega o tamanho da string para saber a posição ao qual voltar
         $tamanho = strlen($publicacao["ra_conteudo"]);
         $texto = ($tamanho-$position_escrivao[$i]);
-
+        // pega o nome do juiz(a)
         $nome_juiz[$i] = substr($publicacao["ra_conteudo"], $position_juiz[$i], -$texto);
 
-        $nome = "Linha de codigo";
-        $parte = substr($nome, 6, -7);
+        if (stripos($publicacao["ra_conteudo"],utf8_decode('divórcio'))) {
+            $classificacao[$i] = 'DIVORCIO';
+        }elseif(stripos($publicacao["ra_conteudo"],utf8_decode('alimentos - '))){
+            $classificacao[$i] = 'ALIMENTOS';
+        }elseif (stripos($publicacao["ra_conteudo"],utf8_decode('investigação de paternidade'))){
+            $classificacao[$i] = 'INVESTIGAÇÃO DE PATERNIDADE';
+        }elseif (stripos($publicacao["ra_conteudo"],utf8_decode('inventario'))){
+            $classificacao[$i] =   'INVENTÁRIO';
+        }
 
         echo utf8_encode($publicacao["ra_conteudo"].'<br/><br/><br/><br/><br/><br/><br/><br/>');
         $i++;
     }
-    echo '<br/><br/><br/><br/><br/>';
-//    foreach ($position_juiz as $juiz){
-//        echo $juiz.'<br/>';
+
+    $j = 0;
+//while ($publicacao  = $busca->fetch_array()) {
+//        echo '<hr/>';
+//        echo $classificacao[$j].'<br/>';
+//        echo $nome_juiz[$j].'<br/>';
+//        echo $publicacao["ra_conteudo"].'<br/><br/><br/><br/>';
+//        $j++;
 //    }
-//
-//    echo '<br/><br/><br/><br/><br/><br/><br/><br/>';
-//    foreach ($position_escrivao as $escrivao){
-//        echo $escrivao.'<br/>';
-//    }
 
-foreach ($nome_juiz as $juiz){
-    echo utf8_encode($juiz).'<br/>';
-}
+    foreach ($classificacao as $item){
+        echo $item.'<br>';
+    }
 
-echo $parte;
-
-
-
-
-?>
-
+    ?>
 </body>
 </html>
